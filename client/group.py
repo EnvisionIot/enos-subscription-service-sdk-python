@@ -1,14 +1,17 @@
 from __future__ import absolute_import
 
 import copy
+import logging
 import time
 
 from client.error import EnosClientConfigurationError
 from internal.core import SocketClient
 from internal.structs import TopicPartition
 from proto import sub_pb2
-
 from vendor import six
+
+log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 DEFAULT_CONFIG = {
     'host': None,
@@ -17,7 +20,8 @@ DEFAULT_CONFIG = {
     'access_secret': None,
     'sub_id': None,
     'consumer_group': '',
-    'auto_commit_interval_ms': 5000
+    'auto_commit_interval_ms': 5000,
+    'sub_type': 0
 }
 
 NOT_MATCHED_MESSAGE = '_*NMM!_'
@@ -33,7 +37,10 @@ def do_commit(consumer_offsets, ws):
             commit.topic = tp.topic
             commit.partition = tp.partition
             commit.offset = offset
-        ws.commit_offsets(commit_dto)
+        try:
+            ws.commit_offsets(commit_dto)
+        except (Exception, KeyboardInterrupt, SystemExit) as e:
+            log.debug('Commit offset error', e)
 
 
 class DataClient(six.Iterator):
@@ -45,7 +52,8 @@ class DataClient(six.Iterator):
 
         self.config = copy.copy(DEFAULT_CONFIG)
         self.config.update(configs)
-        self.config['sub_type'] = 0
+        if not self.config['sub_type']:
+            self.config['sub_type'] = 0
         self.ws_client = None
         self._iterator = None
         self.consumer_offset = {}
@@ -102,19 +110,20 @@ class DataClient(six.Iterator):
             yield self.ws_client.poll()
 
 
-class AlertClient(six.Iterator):
-    CONFIG = {
-        'host': None,
-        'port': 9001,
-        'accessKey': None,
-        'accessSecret': None,
-        'prefetch': False,
-        'requestTimeout': 10000
-    }
+class AlertClient(DataClient):
+    def __init__(self, **configs):
+        configs['sub_type'] = 1
+        super().__init__(**configs)
+
+
+class OfflineData(DataClient):
+    def __init__(self, **configs):
+        configs['sub_type'] = 3
+        super().__init__(**configs)
 
 
 if __name__ == '__main__':
-    client = DataClient(host='127.0.0.1', port='9001',
+    client = DataClient(host='10.27.21.246', port='9001',
                         access_key='ea199c3e-f272-4e3d-96af-c59a707322cc',
                         access_secret='9f545c81-9839-4907-999e-307724b40183')
 

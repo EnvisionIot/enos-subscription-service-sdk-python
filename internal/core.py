@@ -1,6 +1,6 @@
+import copy
 import hashlib
 import logging
-import copy
 import queue
 import socket
 import threading
@@ -19,8 +19,6 @@ from websocket import create_connection
 
 from proto import sub_pb2
 from proto import common_pb2
-
-from threading import Lock
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -84,16 +82,22 @@ def build_pkg(cmd_id, data):
 
 def run(*args):
     ws_client = args[0]
-    while not ws_client.stop_event.set():
+    epoch = ws_client.epoch
+    while ws_client.connected:
         print("poll")
+        if epoch != ws_client.epoch:
+            return
         ws_client.pull_once()
     log.debug("socket already closed")
 
 
 def lifecycle_keeper(*args):
     ws_client = args[0]
-    while not ws_client.stop_event.set():
+    epoch = ws_client.epoch
+    while ws_client.connected:
         print('ping alive')
+        if epoch != ws_client.epoch:
+            return
         if time.time() > ws_client.next_ping_deadline:
             ws_client.ping_and_recv()
             ws_client.next_ping_deadline = ws_client.next_ping_deadline + ws_client.ping_interval
@@ -123,12 +127,13 @@ class SocketClient:
         self.config = copy.copy(self.DEFAULT_CONFIG)
         self.config.update(configs)
         self.ws = None
-        self.stop_event = threading.Event()
         self.message_queue = queue.Queue(DEFAULT_MESSAGE_QUEUE_SIZE)
         self.pull_id = 0
-        self.lock = threading.Lock()
+        self.lock = threading.RLock()
         self.ping_interval = 10
         self.next_ping_deadline = None
+        self.connected = False
+        self.epoch = 0
 
     def start(self):
         log.debug("start the subscription client")
@@ -136,8 +141,23 @@ class SocketClient:
         port = self.config['port']
         url = """ws://{_address}:{_port}""".format(_address=server_address, _port=port)
 
-        self.ws = create_connection(url)
+        while not self.connected:
+            try:
+                self.ws = create_connection(url)
+                self.connected = True
+                time.sleep(1)
+            except (Exception, KeyboardInterrupt, SystemExit) as e:
+                log.debug('connect fail', e)
+        self.epoch = self.epoch + 1
         self.auth()
+
+    """
+    restart connect process when exception occur
+    """
+
+    def reconnect(self):
+        self.message_queue.queue.clear()
+        self.start()
 
     def auth(self):
         auth_req = sub_pb2.AuthReq()
@@ -216,7 +236,7 @@ class SocketClient:
                 self.message_queue.put(msg)
 
     def stop(self):
-        self.stop_event.set()
+        self.connected = False
 
     def poll(self):
         return self.message_queue.get()
@@ -236,8 +256,10 @@ class SocketClient:
             else:
                 self.ws.send(message_to_send, websocket.ABNF.OPCODE_BINARY)
         except (Exception, KeyboardInterrupt, SystemExit) as e:
-
             log.debug('Error occur', e)
+            self.connected = False
+            self.reconnect()
+            raise e
         finally:
             self.lock.release()
 
@@ -246,13 +268,18 @@ class SocketClient:
         try:
             self.ws.ping()
             print('send ping')
+        except (Exception, KeyboardInterrupt, SystemExit) as e:
+            log.debug('Error occur', e)
+            self.connected = False
+            self.reconnect()
+            raise e
         finally:
             self.lock.release()
 
 
 if __name__ == '__main__':
     websocket.enableTrace(True)
-    client = SocketClient(server_address='127.0.0.1',
+    client = SocketClient(server_address='10.27.21.246',
                           access_key='ea199c3e-f272-4e3d-96af-c59a707322cc',
                           access_secret='9f545c81-9839-4907-999e-307724b40183',
                           sub_id='sub-1573716301144',
