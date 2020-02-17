@@ -20,7 +20,7 @@ DEFAULT_CONFIG = {
     'access_secret': None,
     'sub_id': None,
     'consumer_group': '',
-    'auto_commit_interval_ms': 5000,
+    'auto_commit_interval_seconds': 5,
     'sub_type': 0
 }
 
@@ -57,7 +57,7 @@ class DataClient(six.Iterator):
         self.ws_client = None
         self._iterator = None
         self.consumer_offset = {}
-        self.auto_commit_interval = self.config['auto_commit_interval_ms']
+        self.auto_commit_interval = self.config['auto_commit_interval_seconds']
         self.next_auto_commit_deadline = None
 
     def __iter__(self):

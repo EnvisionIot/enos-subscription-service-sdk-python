@@ -1,0 +1,79 @@
+=======================
+enos-subscribe-python
+=======================
+
+enos-subscribe 订阅客户端python版本
+
+使用该客户端可以订阅Enos平台的实时、告警和离线数据
+
+License
+=======
+
+ - BSD
+
+安装
+============
+
+This module is tested on Python 2.7 and Python 3.4+.
+
+本模块支持Python 2.7 和 Python 3.4及以上版本
+
+使用 "python setup.py install" 或者 "pip install enos-subscribe" 进行安装.
+
+本项目依赖如下模块
+
+ - six
+ - google.protobuf
+ - websocket_client
+
+
+Examples
+========
+
+实时数据订阅
+---------------------
+
+.. code:: python
+
+    if __name__ == '__main__':
+        client = DataClient(host='10.27.21.246', port='9001',
+                            access_key='Your Access Key of this subscription',
+                            access_secret='Your Access Secret of this subscription')
+
+        client.subscribe(sub_id='Your subscription Id')
+
+        for message in client:
+            print(message)
+
+
+
+告警数据订阅
+---------------------
+
+.. code:: python
+
+    if __name__ == '__main__':
+        client = AlertClient(host='10.27.21.246', port='9001',
+                            access_key='Your Access Key of this subscription',
+                            access_secret='Your Access Secret of this subscription')
+
+        client.subscribe(sub_id='Your subscription Id')
+
+        for message in client:
+            print(message)
+
+
+离线数据订阅
+---------------------
+
+.. code:: python
+
+    if __name__ == '__main__':
+        client = OfflineDataClient(host='10.27.21.246', port='9001',
+                            access_key='Your Access Key of this subscription',
+                            access_secret='Your Access Secret of this subscription')
+
+        client.subscribe(sub_id='Your subscription Id')
+
+        for message in client:
+            print(message)

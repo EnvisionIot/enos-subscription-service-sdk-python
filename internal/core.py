@@ -84,18 +84,16 @@ def run(*args):
     ws_client = args[0]
     epoch = ws_client.epoch
     while ws_client.connected:
-        print("poll")
         if epoch != ws_client.epoch:
             return
         ws_client.pull_once()
-    log.debug("socket already closed")
+    log.info("socket already closed")
 
 
 def lifecycle_keeper(*args):
     ws_client = args[0]
     epoch = ws_client.epoch
     while ws_client.connected:
-        print('ping alive')
         if epoch != ws_client.epoch:
             return
         if time.time() > ws_client.next_ping_deadline:
@@ -103,8 +101,7 @@ def lifecycle_keeper(*args):
             ws_client.next_ping_deadline = ws_client.next_ping_deadline + ws_client.ping_interval
         else:
             time.sleep(1)
-        print('ping finish')
-    log.debug("socket already closed")
+    log.info("socket already closed")
 
 
 class SocketClient:
@@ -136,7 +133,7 @@ class SocketClient:
         self.epoch = 0
 
     def start(self):
-        log.debug("start the subscription client")
+        log.info("start the subscription client")
         server_address = self.config['server_address']
         port = self.config['port']
         url = """ws://{_address}:{_port}""".format(_address=server_address, _port=port)
@@ -170,7 +167,7 @@ class SocketClient:
 
         auth_bytes = build_pkg(_MESSAGE_MAP[sub_pb2.AuthReq], auth_req.SerializeToString())
 
-        log.debug("Send auth: %s", auth_req)
+        log.info("Send auth: %s", auth_req)
 
         message = self.send_and_recv(auth_bytes)
 
@@ -181,7 +178,7 @@ class SocketClient:
         if message_type == sub_pb2.AuthRsp:
             ack = message_real.ack
             if 0 != ack:
-                log.debug("Auth fail, auth info: %s", auth_req)
+                log.info("Auth fail, auth info: %s", auth_req)
                 self.ws.close()
             else:
                 self.next_ping_deadline = time.time() + self.ping_interval
@@ -201,7 +198,7 @@ class SocketClient:
 
         sub_bytes = build_pkg(_MESSAGE_MAP[sub_pb2.SubReq], sub_req.SerializeToString())
 
-        log.debug("Send sub request: %s", sub_req)
+        log.info("Send sub request: %s", sub_req)
 
         message = self.send_and_recv(sub_bytes)
 
@@ -210,10 +207,10 @@ class SocketClient:
         if message_type == sub_pb2.SubRsp:
             ack = message_real.ack
             if 0 != ack:
-                log.debug("Sub fail, sub info: %s", sub_req)
+                log.info("Sub fail, sub info: %s", sub_req)
                 self.ws.close()
             else:
-                log.debug("Sub success")
+                log.info("Sub success")
                 thread.start_new_thread(run, (self,))
         else:
             log.debug("Receive unexpect response, need SubRsp, receive: %s", message_type)
@@ -242,8 +239,9 @@ class SocketClient:
         return self.message_queue.get()
 
     def commit_offsets(self, consumer_offsets):
-        if not consumer_offsets:
+        if consumer_offsets:
             commit_bytes = build_pkg(_MESSAGE_MAP[sub_pb2.CommitDTO], consumer_offsets.SerializeToString())
+            log.debug('Commit Offsets: %s', consumer_offsets)
             self.send_and_recv(commit_bytes, need_recv=False)
 
     def send_and_recv(self, message_to_send=None, need_recv=True):
@@ -256,7 +254,7 @@ class SocketClient:
             else:
                 self.ws.send(message_to_send, websocket.ABNF.OPCODE_BINARY)
         except (Exception, KeyboardInterrupt, SystemExit) as e:
-            log.debug('Error occur', e)
+            log.error('Error occur', e)
             self.connected = False
             self.reconnect()
             raise e
@@ -267,9 +265,8 @@ class SocketClient:
         self.lock.acquire()
         try:
             self.ws.ping()
-            print('send ping')
         except (Exception, KeyboardInterrupt, SystemExit) as e:
-            log.debug('Error occur', e)
+            log.error('Error occur', e)
             self.connected = False
             self.reconnect()
             raise e
