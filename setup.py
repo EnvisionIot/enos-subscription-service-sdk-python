@@ -3,7 +3,7 @@ from setuptools import setup
 VERSION = '2.4.1'
 NAME = 'enos-subscribe'
 
-install_requires = ["six", 'google', 'websocket_client']
+install_requires = ["six", 'protobuf', 'websocket_client']
 tests_require = []
 
 insecure_pythons = '2.6, ' + ', '.join("2.7.{pv}".format(pv=pv) for pv in range(10))
