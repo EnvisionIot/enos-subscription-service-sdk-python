@@ -2,9 +2,9 @@ import websocket
 import hashlib
 from websocket import WebSocket
 
-from client.error import EnosClientInnerParamsError
+from .error import EnosClientInnerParamsError
 
-from proto import sub_pb2
+from .proto import sub_pb2
 
 
 def sign(access_key=None, sub_id=None, secret=None):

@@ -13,12 +13,12 @@ except ImportError:
 
 import websocket
 
-from client.error import EnosClientConfigurationError
+from .error import EnosClientConfigurationError
 
 from websocket import create_connection
 
-from proto import sub_pb2
-from proto import common_pb2
+from .proto import sub_pb2
+from .proto import common_pb2
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)

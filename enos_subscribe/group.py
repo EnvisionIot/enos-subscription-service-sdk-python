@@ -4,11 +4,11 @@ import copy
 import logging
 import time
 
-from client.error import EnosClientConfigurationError
-from internal.core import SocketClient
-from internal.structs import TopicPartition
-from proto import sub_pb2
-from vendor import six
+from .error import EnosClientConfigurationError
+from .core import SocketClient
+from .structs import TopicPartition
+from .proto import sub_pb2
+from .vendor import six
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)

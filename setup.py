@@ -1,7 +1,7 @@
 from setuptools import setup
 
 VERSION = '2.4.1'
-NAME = 'enos-subscribe'
+NAME = 'enos_subscribe'
 
 install_requires = ["six", 'protobuf', 'websocket_client']
 tests_require = []
@@ -19,8 +19,8 @@ setup(
     version=VERSION,
     description="Enos subscribe client for python",
     long_description=open("README.rst").read(),
-    author="Yuanyuan Xia",
-    author_email="yuanyuan.xia@envision-digital.com",
+    author="EnvisionIot",
+    author_email="EnvisionIot",
     license="BSD",
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     classifiers=[
@@ -44,5 +44,5 @@ setup(
     ],
     keywords='enos subscribe client',
     install_requires=install_requires,
-    packages=["client", "internal", "proto"]
+    packages=["enos_subscribe", "enos_subscribe.proto", "enos_subscribe.vendor", "enos_subscribe.test"]
 )

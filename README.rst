@@ -14,8 +14,6 @@ License
 安装
 ============
 
-This module is tested on Python 2.7 and Python 3.4+.
-
 本模块支持Python 2.7 和 Python 3.4及以上版本
 
 使用 "python setup.py install" 或者 "pip install enos-subscribe" 进行安装.
@@ -36,7 +34,7 @@ Examples
 .. code:: python
 
     if __name__ == '__main__':
-        client = DataClient(host='10.27.21.246', port='9001',
+        client = DataClient(host='sub-host', port='sub-port',
                             access_key='Your Access Key of this subscription',
                             access_secret='Your Access Secret of this subscription')
 
@@ -53,7 +51,7 @@ Examples
 .. code:: python
 
     if __name__ == '__main__':
-        client = AlertClient(host='10.27.21.246', port='9001',
+        client = AlertClient(host='sub-host', port='sub-port',
                             access_key='Your Access Key of this subscription',
                             access_secret='Your Access Secret of this subscription')
 
@@ -69,7 +67,7 @@ Examples
 .. code:: python
 
     if __name__ == '__main__':
-        client = OfflineDataClient(host='10.27.21.246', port='9001',
+        client = OfflineDataClient(host='sub-host', port='sub-port',
                             access_key='Your Access Key of this subscription',
                             access_secret='Your Access Secret of this subscription')
 
