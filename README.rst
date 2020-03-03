@@ -32,6 +32,7 @@ Examples
 ---------------------
 
 .. code:: python
+
     from enos_subscribe import DataClient
 
     if __name__ == '__main__':
@@ -50,6 +51,7 @@ Examples
 ---------------------
 
 .. code:: python
+
     from enos_subscribe import AlertClient
 
     if __name__ == '__main__':
@@ -67,6 +69,7 @@ Examples
 ---------------------
 
 .. code:: python
+
     from enos_subscribe import OfflineDataClient
 
     if __name__ == '__main__':
