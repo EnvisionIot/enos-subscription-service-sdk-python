@@ -32,6 +32,7 @@ Examples
 ---------------------
 
 .. code:: python
+    from enos_subscribe import DataClient
 
     if __name__ == '__main__':
         client = DataClient(host='sub-host', port='sub-port',
@@ -49,6 +50,7 @@ Examples
 ---------------------
 
 .. code:: python
+    from enos_subscribe import AlertClient
 
     if __name__ == '__main__':
         client = AlertClient(host='sub-host', port='sub-port',
@@ -65,6 +67,7 @@ Examples
 ---------------------
 
 .. code:: python
+    from enos_subscribe import OfflineDataClient
 
     if __name__ == '__main__':
         client = OfflineDataClient(host='sub-host', port='sub-port',
