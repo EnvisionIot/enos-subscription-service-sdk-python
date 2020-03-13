@@ -1,35 +1,35 @@
-=======================
-enos-subscribe-python
-=======================
+=======================================
+EnOS Data Subscription SDK for Python
+=======================================
 
-enos-subscribe 订阅客户端python版本
+EnOS Data Subscription Service improves the API calling efficiency of applications with active data push, which supports subscription to real-time asset data, offline asset data, and asset alert data.
 
-使用该客户端可以订阅Enos平台的实时、告警和离线数据
+After configuring and starting data subscription jobs on the EnOS Management Console, you can use the Data Subscription SDK for Python to develop applications for consuming the subscribed data.
 
 License
-=======
+=========
 
  - BSD
 
-安装
-============
+Installtion
+==============
 
-本模块支持Python 2.7 和 Python 3.4及以上版本
+The Data Subscription SDK for Python supports Python 2.7, Python 3.4, and newer versions.
 
-使用 "python setup.py install" 或者 "pip install enos-subscribe" 进行安装.
+You can use "python setup.py install" or "pip install enos-subscribe" to intall this SDK.
 
-本项目依赖如下模块
+This SDK has the following dependency modules:
 
  - six
  - google.protobuf
  - websocket_client
 
 
-Examples
-========
+Code Sample
+==============
 
-实时数据订阅
----------------------
+Code Sample for Consuming Subscribed Real-time Data
+-------------------------------------------------------
 
 .. code:: python
 
@@ -46,9 +46,8 @@ Examples
             print(message)
 
 
-
-告警数据订阅
----------------------
+Code Sample for Consuming Subscribed Alert Data
+---------------------------------------------------
 
 .. code:: python
 
@@ -65,8 +64,8 @@ Examples
             print(message)
 
 
-离线数据订阅
----------------------
+Code Sample for Consuming Subscribed Offline Data
+---------------------------------------------------------
 
 .. code:: python
 
