@@ -16,7 +16,7 @@ Installtion
 
 The Data Subscription SDK for Python supports Python 2.7, Python 3.4, and newer versions.
 
-You can use "python setup.py install" or "pip install enos-subscribe" to intall this SDK.
+You can use "python setup.py install" or "pip install enos-subscribe" to install this SDK.
 
 This SDK has the following dependency modules:
 
