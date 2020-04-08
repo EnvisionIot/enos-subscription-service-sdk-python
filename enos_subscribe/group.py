@@ -116,21 +116,27 @@ class AlertClient(DataClient):
         super().__init__(**configs)
 
 
-class OfflineData(DataClient):
+class OfflineClient(DataClient):
     def __init__(self, **configs):
         configs['sub_type'] = 3
         super().__init__(**configs)
 
 
-if __name__ == '__main__':
-    client = DataClient(host='10.27.21.246', port='9001',
-                        access_key='ea199c3e-f272-4e3d-96af-c59a707322cc',
-                        access_secret='9f545c81-9839-4907-999e-307724b40183')
+class EventClient(DataClient):
+    def __init__(self, **configs):
+        configs['sub_type'] = 4
+        super().__init__(**configs)
 
-    client.subscribe(sub_id='sub-1573716301144')
 
-    for message in client:
-        print(message)
+# if __name__ == '__main__':
+#     client = DataClient(host='10.27.21.246', port='9001',
+#                         access_key='ea199c3e-f272-4e3d-96af-c59a707322cc',
+#                         access_secret='9f545c81-9839-4907-999e-307724b40183')
+#
+#     client.subscribe(sub_id='sub-1573716301144')
+#
+#     for message in client:
+#         print(message)
 
     # consumer_offsets_ = {
     #     TopicPartition('topic1', 1): 123,

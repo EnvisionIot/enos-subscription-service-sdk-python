@@ -69,10 +69,28 @@ Code Sample for Consuming Subscribed Offline Data
 
 .. code:: python
 
-    from enos_subscribe import OfflineDataClient
+    from enos_subscribe import OfflineClient
 
     if __name__ == '__main__':
-        client = OfflineDataClient(host='sub-host', port='sub-port',
+        client = OfflineClient(host='sub-host', port='sub-port',
+                            access_key='Your Access Key of this subscription',
+                            access_secret='Your Access Secret of this subscription')
+
+        client.subscribe(sub_id='Your subscription Id')
+
+        for message in client:
+            print(message)
+
+
+Code Sample for Consuming Subscribed Event Data
+---------------------------------------------------------
+
+.. code:: python
+
+    from enos_subscribe import EventClient
+
+    if __name__ == '__main__':
+        client = EventClient(host='sub-host', port='sub-port',
                             access_key='Your Access Key of this subscription',
                             access_secret='Your Access Secret of this subscription')
 
