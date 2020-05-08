@@ -19,6 +19,7 @@ setup(
     version=VERSION,
     description="Enos subscribe client for python",
     long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     author="EnvisionIot",
     author_email="sw.tc@envision-digital.com",
     license="BSD",
