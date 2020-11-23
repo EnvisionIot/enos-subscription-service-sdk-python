@@ -128,6 +128,12 @@ class EventClient(DataClient):
         super().__init__(**configs)
 
 
+class AdvancedAlertClass(DataClient):
+    def __init__(self, **configs):
+        configs['sub_type'] = 5
+        super().__init__(**configs)
+
+
 # if __name__ == '__main__':
 #     client = DataClient(host='10.27.21.246', port='9001',
 #                         access_key='ea199c3e-f272-4e3d-96af-c59a707322cc',
