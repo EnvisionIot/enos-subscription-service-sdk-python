@@ -113,6 +113,23 @@ if __name__ == '__main__':
         print(message)
 ```
 
+### Code Sample for Consuming Subscribed Advanced Alert Data
+
+```
+from enos_subscribe import AdvancedAlertClient
+
+if __name__ == '__main__':
+    client = AdvancedAlertClient(host='sub-host', port='sub-port',
+                        access_key='Your Access Key of this subscription',
+                        access_secret='Your Access Secret of this subscription')
+
+    client.subscribe(sub_id='Your subscription Id')
+
+    for message in client:
+        print(message)
+```
+
+
 ### Code Sample for Consuming Subscribed Offline Data
 
 ```
@@ -159,3 +176,4 @@ To learn more about the Data Subscription feature of EnOS Enterprise Data Platfo
 
 - 2020/03/03 (2.4.1): Initial release
 - 2020/04/08 (2.5.0): Added the feature of event data subscription
+- 2020/11/24 (2.6.0): Added the feature of advanced alert subscription 

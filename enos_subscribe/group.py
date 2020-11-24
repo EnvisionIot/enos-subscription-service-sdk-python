@@ -128,7 +128,7 @@ class EventClient(DataClient):
         super().__init__(**configs)
 
 
-class AdvancedAlertClass(DataClient):
+class AdvancedAlertClient(DataClient):
     def __init__(self, **configs):
         configs['sub_type'] = 5
         super().__init__(**configs)
