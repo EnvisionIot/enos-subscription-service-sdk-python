@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '2.5.0'
+VERSION = '2.6.0'
 NAME = 'enos_subscribe'
 
 install_requires = ["six", 'protobuf', 'websocket_client']
